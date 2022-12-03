@@ -1,6 +1,6 @@
-//Write a Java program that listens for SSL on port 2000. Forward the plaintext traffic to localhost on UDP port 2001.
-//
-// import java.io.IOException;
+// Write a Java program that listens for SSL on port 2000. Forward the plaintext traffic to localhost on UDP port 2001.
+// https://beta.openai.com/playground/p/s38dq0CREeBmXpCcUAVK0NDx
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
