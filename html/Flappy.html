@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mandelbrot Set Explorer</title>
+    <style>
+			body {
+				margin: 0;
+				background-color: #000000;
+				color: #FFFFFF;
+				font-family: sans-serif;
+			}
+			#mandelbrot-visual {
+				position: relative;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-color: #000000;
+				border: 1px solid #FFFFFF;
+			}
+			#controls {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 50px;
+				background-color: #FFFFFF;
+				border: 1px solid #000000;
+				text-align: center;
+			}
+			#controls button {
+				margin: 10px;
+				padding: 5px 10px;
+				background-color: #000000;
+				color: #FFFFFF;
+				border: 1px solid #FFFFFF;
+				cursor: pointer;
+				outline: none;
+			}
+			#controls button:hover {
+				background-color: #CCCCCC;
+				color: #000000;
+				border: 1px solid #000000;
+			}
+		</style>
+</head>
+<body>
+<canvas id="mandelbrot-visual"></canvas>
+<div id="controls">
+    <button id="zoom-in">Zoom In</button>
+    <button id="zoom-out">Zoom Out</button>
+    <button id="reset">Reset</button>
+</div>
+<script>
+			//Calculate and render Mandelbrot set
+			const canvas = document.querySelector('#mandelbrot-visual');
+			const ctx = canvas.getContext('2d');
+			let width = canvas.width;
+			let height = canvas.height;
+			let xMin = -2;
+			let xMax = 1;
+			let yMin = -1.2;
+			let yMax = 1.2;
+			let iteration = 0;
+			let maxIteration = 100;
+
+			//Draw the Mandelbrot set
+			const drawMandelbrot = () => {
+				for (let x = 0; x < width; x++) {
+					for (let y = 0; y < height; y++) {
+						let a = map(x, 0, width, xMin, xMax);
+						let b = map(y, 0, height, yMin, yMax);
+						let ca = a;
+						let cb = b;
+
+						while (iteration < maxIteration) {
+							let aa = a * a - b * b;
+							let bb = 2 * a * b;
+							a = aa + ca;
+							b = bb + cb;
+							if (Math.sqrt(a * a + b * b) > 2) {
+								break;
+							}
+							iteration++;
+						}
+
+						let bright = map(iteration, 0, maxIteration, 0, 1);
+						bright = map(Math.sqrt(bright), 0 ,1, 0, 255);
+						if (iteration === maxIteration) {
+							bright = 0;
+						}
+
+						let pix = (x + y * width) * 4;
+						let imageData = ctx.getImageData(0, 0, width, height);
+						imageData.data[pix + 0] = bright;
+						imageData.data[pix + 1] = bright;
+						imageData.data[pix + 2] = bright;
+						imageData.data[pix + 3] = 255;
+						ctx.putImageData(imageData, 0, 0);
+						iteration = 0;
+					}
+				}
+			}
+
+			//Map value from one range to another
+			const map = (value, start1, stop1, start2, stop2) => {
+				return ((value - start1) / (stop1 - start1)) * (stop2 - start2) + start2;
+			}
+
+			//Zoom in and out on the Mandelbrot set
+			const zoomIn = () => {
+				xMin += 0.5;
+				xMax -= 0.5;
+				yMin += 0.5;
+				yMax -= 0.5;
+				drawMandelbrot();
+			}
+
+			const zoomOut = () => {
+				xMin -= 0.1;
+				xMax += 0.1;
+				yMin -= 0.1;
+				yMax += 0.1;
+				drawMandelbrot();
+			}
+
+			//Reset view
+			const resetView = () => {
+				xMin = -2;
+				xMax = 1;
+				yMin = -1.2;
+				yMax = 1.2;
+				drawMandelbrot();
+			}
+
+			//Button event listeners
+			document.querySelector('#zoom-in').addEventListener('click', zoomIn);
+			document.querySelector('#zoom-out').addEventListener('click', zoomOut);
+			document.querySelector('#reset').addEventListener('click', resetView);
+
+			//Draw the initial Mandelbrot set
+			drawMandelbrot();
+		</script>
+</body>
+</html>

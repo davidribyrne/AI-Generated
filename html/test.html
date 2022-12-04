@@ -1,0 +1,46 @@
+
+<html>
+<head>
+    <title>Pi Calculator</title>
+    <style>
+		body {
+			background: #F5FFFA;
+			font-family: sans-serif;
+		}
+		.container {
+			margin: 0 auto;
+			width: 400px;
+		}
+		.result {
+			background: #AED6F1;
+			padding: 15px;
+			border-radius: 10px;
+			margin-top: 20px;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+<div class="container">
+    <h1>Pi Calculator</h1>
+    <p>Enter the number of digits you would like to calculate pi up to:</p>
+    <form action="">
+        <input type="number" id="number" min="1" max="50">
+        <input type="submit" id="submit" value="Calculate">
+    </form>
+    <div class="result"></div>
+</div>
+<script>
+		const submit = document.getElementById('submit');
+		submit.addEventListener('click', calculatePi);
+
+		function calculatePi(e) {
+			e.preventDefault();
+			let number = document.getElementById('number').value;
+			let pi = Math.PI.toFixed(number);
+			document.querySelector('.result').innerHTML = `<p>The value of pi up to ${number} decimal places is:</p>
+			<p>${pi}</p>`;
+		}
+	</script>
+</body>
+</html>
